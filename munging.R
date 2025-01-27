@@ -85,5 +85,5 @@ cleaned_data <- raw_data %>%
 
 
 write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
-
+  
 glimpse(cleaned_data)
