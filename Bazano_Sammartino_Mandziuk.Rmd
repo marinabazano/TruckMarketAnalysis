@@ -1,0 +1,240 @@
+---
+title: "Decoding the Price Tag: How do various factors influence truck pricing
+across different weight categories?"
+author: "Marina Bazano Sammartino (283481), Mateusz Mandziuk (254303)"
+date: "`r format(Sys.time(), '%m/%d/%Y %X')`"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+    number_sections: true
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+## Global options
+library(knitr)
+opts_chunk$set(echo = TRUE,
+               cache = FALSE,
+               prompt = FALSE,
+               tidy = TRUE,
+               comment = NA,
+               message = FALSE,
+               warning = FALSE,
+               fig.width = 7.4,
+               fig.height = 4.7,
+               fig.align = "center")
+opts_knit$set(width = 80)
+```
+# Problem Description
+<div style="text-align: justify">
+The transportation sector is one of the key segments of Poland's economy, with around 7% of its GDP directly linked to transport.[^1] Moreover, around 20% of all UE transport was fulfilled by Poland-based companies [^2], serving as a backbone for trade, logistics, and supply chain management on the continent. With Poland's strategic location as a transit hub in Europe, the demand for commercial vehicles, particularly trucks, is significant and continuously growing [^3]. This dynamic market comprises a wide range of vehicles designed to meet the needs of various industries, from local deliveries to long-haul transportation. Understanding the pricing mechanisms within each segment is essential for car dealerships, manufacturers, transport companies, and all the other stakeholders.  
+This report aims to uncover how various truck parameters, such as engine capacity, vehicle age, brand, model, and other factors, affect the pricing of trucks within different segments of the market. Specifically, the study seeks to answer questions about which factors most significantly influence truck prices in the light, medium, and heavy commercial vehicle categories.
+The core of this student project lies in applying web scraping techniques and leveraging the R programming language to collect and analyze real-world data. The data is sourced from Otomoto[^4], a popular Polish platform for listing second-hand vehicles. By scraping detailed truck listings from this service, the project ensures access to a rich data set that reflects the current market trends and truck offerings.  
+By analyzing these factors, the goal is to offer actionable insights for businesses, fleet managers, and individual buyers looking to optimize their purchasing decisions or fleet management strategies. This study leverages data analytics techniques to identify the key price determinants in the truck market. Ultimately, this research will enhance our understanding of how trucks are priced across various weight categories, helping stakeholders make more informed decisions when navigating the truck market.
+</div>
+
+# Objectives
+
+- **Understand the key characteristics of trucks available for sale**: This includes mileage, fuel type, transmission, engine capacity, power, and origin.
+- **Analyze seller trends**: Determine the types of sellers (individuals or companies) and their presence on the platform.
+- **Evaluate market trends**: Identify patterns in the year of production, colors, and popular brands/models.
+- **Location-based analysis**: Explore where most trucks are located within Mazowieckie Voivodeship.
+
+# Implementation
+<div style="text-align: justify">
+During the project, the main tool used was **R programming language** and a set of libraries dedicated to web scraping, data processing, and analysis, with particular focus on string parsing, data analysis, and visualization.  
+
+For accessing the webpage and gathering the data, the **NAME OF THE LIBRARY** was used. **NAME OF THE LIBRARY** allowed seamless extraction of structured data from the web, enabling the collection of relevant truck listings. In addition, the **NAME OF THE LIBRARY** was utilized to process and clean the obtained data, ensuring consistency and accuracy in the extracted attributes.  
+
+The processed data was then analyzed using libraries such as **NAME OF THE LIBRARY** for efficient data manipulation and **NAME OF THE LIBRARY** for visualizing insights. Together, these tools provided a robust framework for exploring the key factors that influence truck pricing across different market segments.
+
+</div>
+
+# Data Collection
+
+The dataset for this analysis was collected using a custom **web scraper** written in **R**, which specifically targeted the **Otomoto website**, a popular marketplace for vehicle sales in Poland. The scraper was designed to extract detailed information about truck offers, with a primary focus on the **Mazowieckie Voivodeship**. This geographic filter ensures that the analysis remains localized and directly relevant to the region.
+
+## Scraping Strategy
+
+The web scraping process involved several key steps, ensuring both completeness and accuracy.
+
+### **1. Filtering for the Mazowieckie Voivodeship**
+
+The Otomoto website allows filtering listings by region. This was achieved by modifying the query parameters in the URL. Here’s the URL structure used for scraping listings from **Mazowieckie**:
+
+```r
+# Example URL structure for scraping listings from Mazowieckie Voivodeship
+url_base <- "https://www.otomoto.pl/ciezarowe/mazowieckie?search%5Bfilter_enum_damaged%5D=0&page="
+```
+
+- **`mazowieckie`** specifies the voivodeship (region).
+- **`filter_enum_damaged=0`** ensures that only undamaged trucks are included.
+- Pagination was handled by iterating over the page parameter (from **1 to 70**), ensuring all results were captured.
+
+### **2. Extracting Offer Links**
+
+For each page of results, individual truck offer links were identified and collected using **XPath** or **CSS selectors**. These links were essential for accessing detailed truck information.
+
+### **3. Scraping Individual Truck Offers**
+
+Each truck offer page was parsed to extract the following key details:
+
+- **Truck Specifications**: Mileage, fuel type, engine capacity, power, etc.
+- **Seller Information**: Seller type (private or company), name, and time on the platform.
+- **Price**: The listed price of the truck in PLN.
+- **Location**: The precise location of the seller, including city or region.
+- **Description**: The textual description provided by the seller, often containing additional details about the truck's condition, equipment, and history.
+
+
+---
+
+# Data Storage
+
+The scraped data was stored in two stages:
+
+### **Raw Data (truck_market_raw.csv)**
+
+This file contains the data exactly as it was scraped, including all **inconsistencies**, **missing values**, and **HTML tags** intact. This step ensures that the original data is preserved for verification or reprocessing if needed.
+
+### **Cleaned Data (truck_market_cleaned.csv)**
+
+Data cleaning and analysis were performed in the `munging.R` script. Key steps included:
+
+- **Unit Normalization**: 
+  - Converting power to **KM**.
+  - Converting engine capacity to **cm³**.
+  
+- **Country and Weight Separation**: 
+  - Extracting weight (**kg**) and **country of origin** from mixed fields.
+
+- **Standardizing Categorical Values**: 
+  - Normalizing transmission types, fuel types, and vehicle brands to ensure consistency.
+
+- **HTML Removal**: 
+  - Cleaning textual fields (such as descriptions) to remove embedded HTML and extract meaningful details.
+
+The cleaned dataset contains **2,172 rows** and **18 columns**. Below are the key columns:
+- **offer_name**: The name of the truck listing.
+- **price**: The price of the truck (PLN).
+- **mileage_km**: The mileage of the truck (km).
+- **fuel_type**: The type of fuel used (e.g., Diesel).
+- **transmission**: Whether the truck has a manual or automatic transmission.
+- **engine_capacity**: The engine capacity (cm3).
+- **power**: The engine power (KM).
+- **country_of_origin**: The country where the truck originated.
+- **location**: The location of the seller.
+
+---
+
+# Challenges in Data Collection
+
+Several challenges were encountered during the data collection:
+
+**1. Dynamic Website Elements**: Some elements on the Otomoto website were dynamically generated, which required careful use of **XPath** selectors to locate static data reliably.
+
+**2. Mixed Field Values**: Fields like **`country_of_origin`** and **`engine_capacity`** often contained unrelated data (e.g., weights or countries). These inconsistencies were resolved during the data cleaning process.
+
+**3. Pagination**: Managing pagination across 70 pages ensured that **all available offers** were captured without missing data.
+
+---
+
+## Model description
+
+# Obtained Results
+
+## Results from model
+
+## Analysis and Insights
+
+```{r}
+library(ggplot2)
+library(rvest)
+library(dplyr)
+library(stringi)
+library(tidyverse)
+cleaned_data <- read.csv("truck_market_cleaned.csv")
+glimpse(cleaned_data)
+```
+
+### Distribution of truck production years
+```{r}
+ggplot(cleaned_data, aes(x = as.numeric(production_year))) +
+  geom_histogram(binwidth = 1, fill = "blue", alpha = 0.7) +
+  labs(title = "Distribution of Truck Production Years",
+       x = "Year of Production",
+       y = "Count") +
+  theme_minimal()
+
+
+# Plot: Top 10 brands by frequency
+cleaned_data %>%
+  count(vehicle_brand, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(vehicle_brand, n), y = n, fill = vehicle_brand)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top 10 Truck Brands in the Market",
+       x = "Brand",
+       y = "Count") +
+  theme_minimal()
+```
+#### Key Insights:
+
+### Top 10 brands by frequency
+```{r}
+cleaned_data %>%
+  count(vehicle_brand, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(vehicle_brand, n), y = n, fill = vehicle_brand)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top 10 Truck Brands in the Market",
+       x = "Brand",
+       y = "Count") +
+  theme_minimal()
+```
+#### Key Insights:
+
+### Seller types
+```{r}
+ggplot(cleaned_data, aes(x = seller_type, fill = seller_type)) +
+  geom_bar(show.legend = FALSE) +
+  labs(title = "Distribution of Seller Types",
+       x = "Seller Type",
+       y = "Count") +
+  theme_minimal()
+```
+#### Key Insights:
+
+### Price Distribution by Vehicle Brand
+
+This visualization shows how truck prices vary across different brands.
+```{r}
+ggplot(cleaned_data, aes(x = vehicle_brand, y = as.numeric(str_replace(price, " ", "")))) +
+  geom_boxplot(outlier.color = "red", fill = "lightblue") +
+  labs(title = "Price Distribution by Vehicle Brand", x = "Brand", y = "Price (PLN)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+#### Key Insights:
+
+### Mileage vs. Price
+```{r}
+ggplot(cleaned_data, aes(x = as.numeric(str_replace(mileage_km, " km", "")), 
+                         y = as.numeric(str_replace(price, " ", "")))) +
+  geom_point(alpha = 0.6, color = "blue") +
+  labs(title = "Mileage vs. Price", x = "Mileage (km)", y = "Price (PLN)") +
+  theme_minimal() +
+  scale_x_continuous(labels = scales::comma)
+```
+#### Key Insights:
+
+
+# Conclusions
+
+# Sources
+[^1]:   https://tlp.org.pl/wp-content/uploads/2023/07/raport-transport-drogowy-w-polsce-2023.pdf
+[^2]:   https://www.trade.gov.pl/aktualnosci/polski-transport-to-europejska-potega/
+[^3]:   https://stat.gov.pl/obszary-tematyczne/transport-i-lacznosc/transport/transport-drogowy-w-polsce-w-latach-2022-i-2023,6,8.html
+[^4]:   https://www.otomoto.pl/ciezarowe/mazowieckie
+ 
