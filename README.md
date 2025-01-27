@@ -17,5 +17,5 @@ The code for the scraping and the cleaning of the raw data was done with an R sc
 - Bazano_Sammartino_Mandziuk.html -> the html knitted file resulting from the .Rmd file.
 
 ### Contributors
+Marina Bazano Sammartino  
 Mateusz Mandziuk
-Marina Bazano Sammartino
