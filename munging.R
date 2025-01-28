@@ -1,5 +1,6 @@
 library(dplyr)
 library(stringi)
+library(stringr)
 
 
 raw_data <- read.csv("truck_market_data_with_prices.csv", stringsAsFactors = FALSE)
@@ -101,6 +102,18 @@ cleaned_data <- cleaned_data %>%
     description = trimws(description) # Trim any leading or trailing whitespace
   )
 
+cleaned_data <- cleaned_data %>%
+  mutate(
+    power_num = as.integer(str_extract(power, "\\d+")),
+    engine_capacity_num = as.integer(str_extract(engine_capacity, "\\d+")),
+    mileage_km_num = as.integer(str_replace_all(str_extract(mileage_km, "\\d+"), " ", "")),
+    weight_kg_num = as.integer(weight_kg) # Assuming weight_kg is already numeric
+  )
+
+cleaned_data <- cleaned_data %>%
+  mutate(
+    years = 2025 - production_year
+  )
 
 write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
 
