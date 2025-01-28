@@ -87,3 +87,21 @@ cleaned_data <- raw_data %>%
 write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
   
 glimpse(cleaned_data)
+
+
+cleaned_data <- read.csv("cleaned_truck_market_data.csv", stringsAsFactors = FALSE)
+
+cleaned_data$description
+
+cleaned_data <- cleaned_data %>%
+  mutate(
+    description = stri_replace_all_regex(description, "\\.ooa-[^;]*;\\}|\\.ooa-[^\\{]*\\{[^\\}]*\\}", ""), # Remove `.ooa-*` and related CSS
+    description = stri_replace_all_regex(description, "<[^>]*>", ""), # Remove any remaining HTML tags
+    description = gsub("\n", " ", description), # Replace newline characters with a space
+    description = trimws(description) # Trim any leading or trailing whitespace
+  )
+
+
+write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
+
+glimpse(cleaned_data)
