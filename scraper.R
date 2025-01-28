@@ -55,7 +55,7 @@ all_offers <- unique(all_offers)
 print(paste("Total unique offers:", length(all_offers)))
 
 # iterating over the offers
-for (offer_link in all_offers[10:15]) {
+for (offer_link in all_offers) {
   tryCatch({
     response <- GET(offer_link, user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0"))
     Sys.sleep(3)
