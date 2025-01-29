@@ -3,7 +3,7 @@ library(rvest)
 library(dplyr)
 library(stringi)
 library(tidyverse)
-library(xml2)
+
 # data set
 truck_data <- data.frame(
   offer_name = character(),
@@ -26,9 +26,28 @@ truck_data <- data.frame(
   stringsAsFactors = FALSE
 )
 
+
+# getting last page
+
+url <- paste0("https://www.otomoto.pl/ciezarowe/mazowieckie?search%5Bfilter_enum_damaged%5D=0&page=")
+
+response <- GET(url, user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0"))
+
+page <- content(response)
+
+active_page <- page %>%
+  html_elements("li[aria-selected='false']") %>%
+  html_text() %>%
+  as.integer()
+last_page <- max(active_page, na.rm = TRUE)
+
+print(last_page)
+
+
+
 # iterating over the pages
 all_offers <- c()
-for (i in 1:2) {
+for (i in 1:last_page) {
   tryCatch({
     
     url <- paste0("https://www.otomoto.pl/ciezarowe/mazowieckie?search%5Bfilter_enum_damaged%5D=0&page=", i)
