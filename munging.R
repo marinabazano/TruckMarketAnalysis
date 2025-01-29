@@ -19,34 +19,30 @@ country_list <- c(
 
 cleaned_data <- raw_data %>%
   mutate(
-    # 1. Initialize weight_kg column by extracting weights from country_of_origin
     weight_kg = ifelse(grepl("kg$", country_of_origin), 
-                       stri_extract_first_regex(country_of_origin, "\\d+"), NA),  # Extract weight
-    country_of_origin = ifelse(grepl("kg$", country_of_origin), NA, country_of_origin),  # Remove weights from country_of_origin
+                       stri_extract_first_regex(country_of_origin, "\\d+"), NA),
+    country_of_origin = ifelse(grepl("kg$", country_of_origin), NA, country_of_origin), 
     
-    # 2. Handle misplaced values in engine_capacity
     engine_capacity_moved = ifelse(
-      grepl("KM$", engine_capacity), engine_capacity,  # Move KM to power
-      ifelse(grepl("kg$", engine_capacity), engine_capacity,  # Move kg to weight_kg
-             ifelse(engine_capacity %in% country_list, engine_capacity, NA)  # Move countries to country_of_origin
+      grepl("KM$", engine_capacity), engine_capacity,
+      ifelse(grepl("kg$", engine_capacity), engine_capacity,
+             ifelse(engine_capacity %in% country_list, engine_capacity, NA) 
       )
     ),
     engine_capacity = ifelse(
-      grepl("cm3$", engine_capacity), engine_capacity, NA  # Keep only valid cm3
+      grepl("cm3$", engine_capacity), engine_capacity, NA 
     ),
     
-    # 3. Handle misplaced values in power
     power_moved = ifelse(
-      grepl("cm3$", power), power,  # Move cm3 to engine_capacity
-      ifelse(grepl("kg$", power), power,  # Move kg to weight_kg
-             ifelse(power %in% country_list, power, NA)  # Move countries to country_of_origin
+      grepl("cm3$", power), power,
+      ifelse(grepl("kg$", power), power, 
+             ifelse(power %in% country_list, power, NA)
       )
     ),
     power = ifelse(
-      grepl("KM$", power), power, NA  # Keep only valid KM
+      grepl("KM$", power), power, NA
     ),
     
-    # 4. Append `engine_capacity_moved` and `power_moved` to appropriate columns
     country_of_origin = ifelse(
       is.na(country_of_origin) & !is.na(engine_capacity_moved) & engine_capacity_moved %in% country_list,
       engine_capacity_moved,
@@ -55,7 +51,6 @@ cleaned_data <- raw_data %>%
       )
     ),
     
-    # Handle misplaced weights in `engine_capacity_moved` and `power_moved`
     weight_kg = ifelse(
       is.na(weight_kg) & grepl("kg$", engine_capacity_moved), 
       stri_extract_first_regex(engine_capacity_moved, "\\d+"),
@@ -64,7 +59,6 @@ cleaned_data <- raw_data %>%
       )
     ),
     
-    # 5. Reassign engine_capacity
     engine_capacity = ifelse(
       is.na(engine_capacity) & grepl("cm3$", power_moved),
       power_moved,
@@ -73,7 +67,6 @@ cleaned_data <- raw_data %>%
       )
     ),
     
-    # 6. Reassign power
     power = ifelse(
       is.na(power) & grepl("KM$", engine_capacity_moved),
       engine_capacity_moved,
@@ -82,24 +75,14 @@ cleaned_data <- raw_data %>%
       )
     )
   ) %>%
-  select(-engine_capacity_moved, -power_moved)  # Drop intermediate columns used for swapping
-
-
-write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
-  
-glimpse(cleaned_data)
-
-
-cleaned_data <- read.csv("cleaned_truck_market_data.csv", stringsAsFactors = FALSE)
-
-cleaned_data$description
+  select(-engine_capacity_moved, -power_moved)
 
 cleaned_data <- cleaned_data %>%
   mutate(
-    description = stri_replace_all_regex(description, "\\.ooa-[^;]*;\\}|\\.ooa-[^\\{]*\\{[^\\}]*\\}", ""), # Remove `.ooa-*` and related CSS
-    description = stri_replace_all_regex(description, "<[^>]*>", ""), # Remove any remaining HTML tags
-    description = gsub("\n", " ", description), # Replace newline characters with a space
-    description = trimws(description) # Trim any leading or trailing whitespace
+    description = stri_replace_all_regex(description, "\\.ooa-[^;]*;\\}|\\.ooa-[^\\{]*\\{[^\\}]*\\}", ""),
+    description = stri_replace_all_regex(description, "<[^>]*>", ""),
+    description = gsub("\n", " ", description),
+    description = trimws(description)
   )
 
 cleaned_data <- cleaned_data %>%
@@ -107,7 +90,7 @@ cleaned_data <- cleaned_data %>%
     power_num = as.integer(str_extract(power, "\\d+")),
     engine_capacity_num = as.integer(str_extract(engine_capacity, "\\d+")),
     mileage_km_num = as.integer(str_replace_all(str_extract(mileage_km, "\\d+"), " ", "")),
-    weight_kg_num = as.integer(weight_kg) # Assuming weight_kg is already numeric
+    weight_kg_num = as.integer(weight_kg)
   )
 
 cleaned_data <- cleaned_data %>%
@@ -118,3 +101,6 @@ cleaned_data <- cleaned_data %>%
 write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
 
 glimpse(cleaned_data)
+
+
+
