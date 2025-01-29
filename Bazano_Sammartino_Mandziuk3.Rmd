@@ -141,7 +141,11 @@ ggplot(cleaned_data, aes(x = as.numeric(production_year))) +
   theme_minimal()
 ```
 
-***Key Insights:*** From the boxplot we can observe something similar to a normal distribution, where the mean value, where more trucks were produced, are between 2010 and 2015.
+***Key Insights:*** The boxplot reveals that the distribution of truck production years resembles a normal distribution, with the highest concentration of trucks manufactured between 2010 and 2015. This suggests that a significant portion of the listings consists of relatively modern trucks, likely due to a combination of depreciation, fleet renewals, and market demand for vehicles within this age range.
+
+Additionally, while the median production year falls within this central range, there are some outliers representing older trucks, possibly well-maintained or specialized models still in circulation. On the other end, newer trucks (post-2020 models) appear less frequent, likely due to higher prices and lower turnover in the secondary market.
+
+This trend provides valuable insights for both buyers and sellers. Buyers may find the most options and competitive pricing in the 2010–2015 range, whereas sellers with older or newer trucks may need to adjust their pricing strategy accordingly.
 
 ### Top 10 brands by frequency
 ```{r}
@@ -172,7 +176,11 @@ ggplot(top_brands, aes(x = reorder(vehicle_brand, n), y = n, fill = n)) +
 
 ```
   
-***Key Insights:***
+***Key Insights:*** The truck market is heavily dominated by MAN and Mercedes-Benz, which together account for over 40% of the listings. This suggests that these brands are widely preferred, likely due to their strong reputation for reliability, availability, and resale value. Their dominance may also indicate that they have well-established distribution networks and after-sales services, making them a top choice for businesses and individual buyers looking for durable and efficient trucks. The presence of these brands at the top of the market highlights their competitive advantage in terms of performance and customer trust.
+
+Following closely behind, DAF, Scania, and Volvo make up a significant portion of the market, collectively representing around 40% of the listings. These brands are known for their engineering quality, fuel efficiency, and longevity, which makes them attractive to trucking companies and logistics providers. While not as dominant as MAN and Mercedes-Benz, their strong presence suggests they are still among the preferred options for buyers who prioritize performance and durability. Renault and Iveco also hold a notable share but do not reach the same level of demand, potentially indicating that they cater to a more specific segment of the market.
+
+In contrast, brands like Krone, Ford, Volkswagen, and FUSO are represented in much smaller numbers, each accounting for 4% or less of the listings. This could be due to lower demand, fewer available models, or a focus on niche segments within the trucking industry. For sellers, this means that offering trucks from these brands may require competitive pricing strategies or targeting specialized buyers. On the other hand, buyers interested in these brands may face limited options, making it necessary to act quickly when a suitable listing appears. These trends suggest that market availability strongly influences purchasing decisions and brand popularity.
 
 
 ### Price distribution of Top 10 brands
@@ -209,7 +217,17 @@ ggplot(price_range, aes(x = vehicle_brand, y = min_price)) +
   theme(legend.position = "none")
 ```
   
-***Key Insights:***
+***Key Insights:*** Based on the visual analysis of truck prices by brand, we can now make a more informed recommendation for companies looking to purchase trucks. To guide this decision, we referred to a trusted source (https://www.tip-used.com/en-gb/what-best-brand-trucks-europe), which ranks truck brands in Europe by factors such as capacity and power. The top recommended brands are as follows:
+
+1. Volvo  
+2. MAN  
+3. DAF  
+4. Scarnia  
+5. Daimer  
+6. Iveco  
+7. Renault  
+
+With this list in mind, companies can now consider both the price distribution and the reputation of these brands in Europe. For businesses aiming to make a strategic purchase, we recommend focusing on DAF or Scania trucks. These brands stand out not only because they are highly regarded in Europe but also because they have a strong presence in the market, with plenty of available offers and relatively stable price ranges. The lower price variation for these brands makes them a smart choice for companies seeking reliable trucks at competitive prices, ensuring both value and performance.
 
 
 ### Seller types
@@ -226,7 +244,9 @@ ggplot(cleaned_data %>% filter(!is.na(seller_type)), aes(x = seller_type, fill =
   theme_minimal()
 ```
   
-***Key Insights:***
+***Key Insights:*** The data shows that most of the truck listings are from private sellers, which is quite interesting given that trucks are often bought by businesses or companies for commercial use. This observation stands out because we might expect companies to be the primary sellers in the market, given the high demand for trucks in industries like logistics, construction, and transportation. However, the majority of the listings coming from private individuals suggests that there could be more personal sales happening than we might have initially assumed.
+
+One possible explanation for this could be that many truck owners, whether they are individuals or small business owners, may prefer to sell their trucks privately rather than through dealerships or business transactions. Private sellers might also be looking to upgrade their vehicles or downsize, leading them to list trucks that were once used for business purposes. This trend could point to a larger number of smaller businesses or individual entrepreneurs who own and sell trucks on their own.
 
 
 ### Price Distribution by Vehicle Brand
@@ -284,7 +304,11 @@ ggplot(cleaned_data, aes(x = years,
   theme_minimal()
 ```
   
-***Key Insights:*** We can observe how the oldest the truck the lower the price and viceversa. Is interesting and maybe expected that it follows a decreasing linear distribution.
+***Key Insights:*** The relationship between truck age and price shows a clear trend: as trucks get older, their price goes down. This makes sense because older trucks usually have more wear and tear, might need more repairs, and often lack the newer features found in more recent models. The fact that the price drops steadily with age is not surprising and follows a simple pattern of depreciation where the truck’s value decreases at a consistent rate over time.
+
+Newer trucks typically offer more modern features, better fuel efficiency, and are seen as more reliable, which makes them more valuable. Older trucks, on the other hand, are seen as less desirable because they often come with higher maintenance costs and potential issues. The more a truck is used, the less buyers are willing to pay for it, which naturally drives the price down.
+
+The linear pattern of this decline in price shows that the used truck market follows a predictable trend. Buyers and sellers can expect that the older the truck, the lower the price will be, and this helps set clear expectations for both parties. This simple trend is a good example of how vehicles lose value over time, and it's easy to see how it works in practice.
 
 
 # Conclusions
