@@ -28,20 +28,25 @@ truck_data <- data.frame(
 
 
 # getting last page
-
-url <- paste0("https://www.otomoto.pl/ciezarowe/mazowieckie?search%5Bfilter_enum_damaged%5D=0&page=")
-
-response <- GET(url, user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0"))
-
-page <- content(response)
-
-active_page <- page %>%
-  html_elements("li[aria-selected='false']") %>%
-  html_text() %>%
-  as.integer()
-last_page <- max(active_page, na.rm = TRUE)
-
-print(last_page)
+tryCatch({
+  url <- "https://www.otomoto.pl/ciezarowe/mazowieckie?search%5Bfilter_enum_damaged%5D=0&page="
+  response <- GET(url, user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0"))
+  
+  if (status_code(response) != 200) {
+    stop(paste("Failed to retrieve page. Status code:", status_code(response)))
+  }
+  
+  page <- content(response)
+  active_page <- page %>%
+    html_elements("li[aria-selected='false']") %>%
+    html_text() %>%
+    as.integer()
+  
+  last_page <- max(active_page, na.rm = TRUE)
+  print(last_page)
+}, error = function(e) {
+  print(paste("Error retrieving last page:", e$message))
+})
 
 
 
@@ -49,10 +54,12 @@ print(last_page)
 all_offers <- c()
 for (i in 1:last_page) {
   tryCatch({
-    
     url <- paste0("https://www.otomoto.pl/ciezarowe/mazowieckie?search%5Bfilter_enum_damaged%5D=0&page=", i)
-    
     response <- GET(url, user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0"))
+    
+    if (status_code(response) != 200) {
+      stop(paste("Failed to retrieve page", i, "Status code:", status_code(response)))
+    }
     
     page <- content(response)
     
@@ -79,6 +86,10 @@ for (offer_link in all_offers) {
     response <- GET(offer_link, user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0"))
     Sys.sleep(3)
     
+    if (status_code(response) != 200) {
+      stop(paste("Failed to retrieve page", i, "Status code:", status_code(response)))
+    }
+    
     offer_page <- content(response)
     
     offer_name <- offer_page %>%
@@ -99,7 +110,6 @@ for (offer_link in all_offers) {
       html_element('p:nth-of-type(2)') %>% 
       html_text(trim = TRUE)
   
-    
     mileage_km <- details[1]
     fuel_type <- details[2]
     transmission <- details[3]
