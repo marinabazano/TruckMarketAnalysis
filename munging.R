@@ -12,7 +12,7 @@ country_list <- c(
   "Austria", "Litwa", "Łotwa", "Estonia", "Szwajcaria", "Wielka Brytania", 
   "Irlandia", "Rumunia", "Bułgaria", "Turcja", "Ukraina", "Białoruś", 
   "Rosja", "Chorwacja", "Słowenia", "Serbia", "Bośnia i Hercegowina", 
-  "Macedonia", "Grecja", "Portugalia", "Chiny", "Japonia", "Korea Południowa", 
+  "Macedonia", "Grecja", "Portugalia", "Chiny", "Japonia", "Korea", 
   "USA", "Kanada", "Brazylia"
 )
 
