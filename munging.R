@@ -87,9 +87,9 @@ cleaned_data <- cleaned_data %>%
 
 cleaned_data <- cleaned_data %>%
   mutate(
-    power_num =  as.integer(stri_replace_all_regex(stri_extract(power, "\\d[\\d\\s]*"), "\\s+", "")),
-    engine_capacity_num = as.integer(stri_replace_all_regex(stri_extract(engine_capacity, "\\d[\\d\\s]*"), "\\s+", "")),
-    mileage_km_num = as.integer(stri_replace_all_regex(stri_extract(mileage_km, "\\d[\\d\\s]*"), "\\s+", "")),
+    power_num =  as.integer(stri_replace_all_regex(stri_extract_first_regex(power, "\\d[\\d\\s]*"), "\\s+", "")),
+    engine_capacity_num = as.integer(stri_replace_all_regex(stri_extract_first_regex(engine_capacity, "\\d[\\d\\s]*"), "\\s+", "")),
+    mileage_km_num = as.integer(stri_replace_all_regex(stri_extract_first_regex(mileage_km, "\\d[\\d\\s]*"), "\\s+", "")),
     weight_kg_num = as.integer(weight_kg)
   )
 
