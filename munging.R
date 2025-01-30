@@ -3,7 +3,7 @@ library(stringi)
 library(stringr)
 
 
-raw_data <- read.csv("truck_market_data_with_prices.csv", stringsAsFactors = FALSE)
+cleaned_data <- read.csv("truck_market_data.csv", stringsAsFactors = FALSE)
 
 # country names
 country_list <- c(
@@ -17,7 +17,7 @@ country_list <- c(
 )
 
 
-cleaned_data <- raw_data %>%
+cleaned_data <- cleaned_data %>%
   mutate(
     weight_kg = ifelse(grepl("kg$", country_of_origin), 
                        stri_extract_first_regex(country_of_origin, "\\d+"), NA),
@@ -97,6 +97,17 @@ cleaned_data <- cleaned_data %>%
   mutate(
     years = 2025 - production_year
   )
+
+cleaned_data <- cleaned_data %>%
+  mutate(
+    transmission = if_else(transmission %in% c("Automatyczna", "Manualna"), transmission, NA_character_),
+    power_num = coalesce(power_num, as.integer(stri_extract_first_regex(transmission, "(?<=^|\\s)\\d{2,3}(?=\\s?KM)"))),
+    engine_capacity_num = coalesce(engine_capacity_num, as.integer(stri_replace_all_regex(stri_extract_first_regex(transmission, "\\d{3,5}(?=\\s?cm3)"), "\\s+", ""))),
+    weight_kg_num = coalesce(weight_kg_num, as.integer(stri_replace_all_regex(stri_extract_first_regex(transmission, "\\d{3,6}(?=\\s?kg)"), "\\s+", "")))
+  )
+
+
+unique(cleaned_data$transmission)
 
 write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
 
