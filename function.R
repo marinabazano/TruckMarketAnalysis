@@ -35,11 +35,10 @@ load_data <- function(file_path) {
 #Add column that defines segment (LCV,MCV,HCV)
     #segmented based on HP or cc
 assign_segment <- function(truck_data) {
-  truck_data$Segment <- ifelse(truck_data$cc < 3000, "LCV", 
-                               ifelse(truck_data$cc < 7500, "MCV", "HCV"))
+  truck_data$segment <- ifelse(truck_data$engine_capacity_num < 3000, "LCV", 
+                               ifelse(truck_data$engine_capacity_num < 7500, "MCV", "HCV"))
   return(truck_data)
 }
-
 # Add column defined (2025-year of production)
     #truck_data$Age <- 2025 - truck_data$Year_of_Production
 calculate_age <- function(truck_data) {
