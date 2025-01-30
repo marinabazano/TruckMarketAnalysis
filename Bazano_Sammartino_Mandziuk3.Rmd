@@ -79,11 +79,11 @@ For each page of results, individual truck offer links were identified and colle
 
 In the following figures we can observe which values where extracted for each offer:
 
-![](Screenshot 2025-01-29 190559.png){width="630"}
+![](offer1.png){width="630"}
 
-![](Screenshot 2025-01-29 190630.png){width="665"}
+![](offer2.png){width="665"}
 
-![](Screenshot 2025-01-29 190651.png){width="659"}
+![](offer3.png){width="659"}
 
 The dataset was segmented into **light**, **medium**, and **heavy** commercial vehicles (*LCV*, *MCV*, *HCV*) categories based on predefined thresholds based on engine capacity. This segmentation allowed us to tailor the analysis to the unique pricing dynamics of each category. By integrating these methods, we developed a detailed understanding of how different factors contribute to truck pricing in the market.
 
@@ -340,5 +340,10 @@ Newer trucks typically offer more modern features, better fuel efficiency, and a
 The linear pattern of this decline in price shows that the used truck market follows a predictable trend. Buyers and sellers can expect that the older the truck, the lower the price will be, and this helps set clear expectations for both parties. This simple trend is a good example of how vehicles lose value over time, and it's easy to see how it works in practice.
 
 # Conclusions
+
+# Access our project!
+
+To access all the versions of our project you can access our Repository on Github.
+https://github.com/marinabazano/TruckMarketAnalysis
 
 # Sources
