@@ -44,6 +44,10 @@ By analyzing these factors, the goal is to offer actionable insights for busines
 
 [^4]: <https://www.otomoto.pl/ciezarowe/mazowieckie>
 
+[^5]: <https://afdc.energy.gov/data/10380>
+
+[^6]: <https://www.tip-used.com/en-gb/what-best-brand-trucks-europe>
+
 # Objectives
 
 This report aims to fulfill 3 main objectives:
@@ -85,7 +89,7 @@ In the following figures we can observe which values where extracted for each of
 
 ![](offer3.png){width="659"}
 
-The dataset was segmented into **light**, **medium**, and **heavy** commercial vehicles (*LCV*, *MCV*, *HCV*) categories based on predefined thresholds based on engine capacity. This segmentation allowed us to tailor the analysis to the unique pricing dynamics of each category. By integrating these methods, we developed a detailed understanding of how different factors contribute to truck pricing in the market.
+The dataset was segmented into **light**, **medium**, and **heavy** commercial vehicles (*LCV*, *MCV*, *HCV*)[^5] categories based on predefined thresholds based on engine capacity. This segmentation allowed us to tailor the analysis to the unique pricing dynamics of each category. By integrating these methods, we developed a detailed understanding of how different factors contribute to truck pricing in the market.
 
 ## **Raw Data**
 
@@ -95,19 +99,24 @@ This file contains the data exactly as it was scraped, including all **inconsist
 
 ## **Cleaned Data**
 
+::: {style="text-align: justify"}
 The cleaned dataset consists of **2,172 rows** and **24 columns**, containing information on truck listings from an online marketplace. The data was preprocessed in the **`munging.R`** script, which handled missing values, standardized formats, and derived additional numerical features for easier analysis.
+:::
 
 ### **Key Features in the Dataset**
 
 #### **Basic Information**
 
+::: {style="text-align: justify"}
 -   `offer_name` *(chr)*: The title of the truck listing, which typically includes the brand, model, and other specifications.\
 -   `production_year` *(int)*: The manufacturing year of the truck, which allows us to compute the age of the vehicle.\
 -   `price` *(chr → int: price_num)*: The listed price of the truck in **PLN** (Polish Złoty). Prices were cleaned by removing spaces and converting them into numerical format.\
 -   `mileage_km` *(chr → int: mileage_km_num)*: The total distance traveled by the truck, originally stored as a string with "km" and converted into numeric form.
+:::
 
 #### **Vehicle Specifications**
 
+::: {style="text-align: justify"}
 -   `vehicle_brand` *(chr)*: The manufacturer of the truck (e.g., **Mercedes-Benz, Volvo, Scania**).\
 -   `vehicle_model` *(chr)*: The specific model of the truck.\
 -   `fuel_type` *(chr)*: The type of fuel the truck uses (e.g., **Diesel**). Almost all listings use **Diesel**, making it a homogeneous feature.\
@@ -115,30 +124,37 @@ The cleaned dataset consists of **2,172 rows** and **24 columns**, containing in
 -   `engine_capacity` *(chr → int: engine_capacity_num)*: The engine size in cubic centimeters (cm³). Extracted and converted into numeric format for analysis.\
 -   `power` *(chr → int: power_num)*: The engine power in **KM (Kilowatts/horsepower)**. This value was cleaned and converted into numerical format.\
 -   `weight_kg` *(int → int: weight_kg_num)*: The truck's weight in **kg**, available for a subset of listings.
+:::
 
 #### **Seller Information**
 
+::: {style="text-align: justify"}
 -   `seller_name` *(chr)*: The name of the seller, either an individual or a dealership/company.\
 -   `seller_type` *(chr)*: The type of seller (**"Osoba prywatna"** = private individual, **"Firma"** = company). Some values were missing and require further analysis.\
 -   `seller_time_on_site` *(chr)*: The duration the seller has been active on the platform, useful for assessing credibility.
+:::
 
 #### **Location & Origin**
 
+::: {style="text-align: justify"}
 -   `country_of_origin` *(chr)*: The country where the truck was originally registered (e.g., **Polska, Niemcy, Finlandia**). Many entries are missing, which suggests that this field may not always be provided.\
 -   `location` *(chr)*: The seller’s location, often including city and region within Poland.
+:::
 
 #### **Derived Features (Numeric Conversions)**
 
+::: {style="text-align: justify"}
 -   `years` *(int)*: The age of the vehicle, derived from `production_year` by subtracting from the current year.
+:::
 
 # Model description
 
 ::: {style="text-align: justify"}
-To analyze the factors affecting truck prices across various weight categories, we applied a combination of machine learning models and data analysis techniques.
+We utilized statistical and data analysis methods to examine the factors influencing truck prices across different weight categories. Our analysis was conducted on the entire dataset and separately for different truck categories to capture variations across weight classes.
 
-Our primary method was **Random Forest**, an ensemble learning algorithm well-suited for capturing complex, non-linear interactions between variables. This model was utilized to determine feature importance, shedding light on which attributes, such as engine capacity, vehicle age, brand, and condition, played the most critical roles in determining truck prices.
+The main technique applied was **Linear Regression**, which allowed us to assess how various factors affect pricing. This model helped quantify the relationship between continuous variables such as engine capacity, vehicle age, and mileage in determining truck prices.
 
-In addition, **Linear Regression** was used as a baseline model to assess how specific factors influence pricing. This approach offered a straightforward interpretation of relationships between variables, particularly for continuous predictors like engine capacity and truck age. To further support the analysis, we performed **Correlation Studies** to measure the strength and direction of relationships between key features and truck prices.
+Additionally, we performed a **Correlation Analysis** to evaluate the strength and direction of associations between key features and pricing. This approach helped identify the most influential variables, providing deeper insights into market dynamics.
 :::
 
 # Obtained Results
@@ -168,11 +184,13 @@ ggplot(cleaned_data, aes(x = as.numeric(production_year))) +
   theme_minimal()
 ```
 
+::: {style="text-align: justify"}
 ***Key Insights:*** The boxplot reveals that the distribution of truck production years resembles a normal distribution, with the highest concentration of trucks manufactured between 2010 and 2015. This suggests that a significant portion of the listings consists of relatively modern trucks, likely due to a combination of depreciation, fleet renewals, and market demand for vehicles within this age range.
 
 Additionally, while the median production year falls within this central range, there are some outliers representing older trucks, possibly well-maintained or specialized models still in circulation. On the other end, newer trucks (post-2020 models) appear less frequent, likely due to higher prices and lower turnover in the secondary market.
 
 This trend provides valuable insights for both buyers and sellers. Buyers may find the most options and competitive pricing in the 2010–2015 range, whereas sellers with older or newer trucks may need to adjust their pricing strategy accordingly.
+:::
 
 ### Top 10 brands by frequency
 
@@ -204,11 +222,13 @@ ggplot(top_brands, aes(x = reorder(vehicle_brand, n), y = n, fill = n)) +
 
 ```
 
+::: {style="text-align: justify"}
 ***Key Insights:*** The truck market is heavily dominated by MAN and Mercedes-Benz, which together account for over 40% of the listings. This suggests that these brands are widely preferred, likely due to their strong reputation for reliability, availability, and resale value. Their dominance may also indicate that they have well-established distribution networks and after-sales services, making them a top choice for businesses and individual buyers looking for durable and efficient trucks. The presence of these brands at the top of the market highlights their competitive advantage in terms of performance and customer trust.
 
 Following closely behind, DAF, Scania, and Volvo make up a significant portion of the market, collectively representing around 40% of the listings. These brands are known for their engineering quality, fuel efficiency, and longevity, which makes them attractive to trucking companies and logistics providers. While not as dominant as MAN and Mercedes-Benz, their strong presence suggests they are still among the preferred options for buyers who prioritize performance and durability. Renault and Iveco also hold a notable share but do not reach the same level of demand, potentially indicating that they cater to a more specific segment of the market.
 
 In contrast, brands like Krone, Ford, Volkswagen, and FUSO are represented in much smaller numbers, each accounting for 4% or less of the listings. This could be due to lower demand, fewer available models, or a focus on niche segments within the trucking industry. For sellers, this means that offering trucks from these brands may require competitive pricing strategies or targeting specialized buyers. On the other hand, buyers interested in these brands may face limited options, making it necessary to act quickly when a suitable listing appears. These trends suggest that market availability strongly influences purchasing decisions and brand popularity.
+:::
 
 ### Price distribution of Top 10 brands
 
@@ -219,33 +239,22 @@ top_brands <- cleaned_data %>%
   slice_max(n, n = 10) %>%
   pull(vehicle_brand)
 
-price_range <- cleaned_data %>%
-  filter(vehicle_brand %in% top_brands, !is.na(price_num)) %>% 
-  group_by(vehicle_brand) %>%
-  summarise(min_price = min(price_num), max_price = max(price_num)) 
+filtered_data <- cleaned_data %>%
+  filter(vehicle_brand %in% top_brands, !is.na(price_num), price_num > 1000) %>%
+  mutate(vehicle_brand = factor(vehicle_brand, levels = rev(top_brands)))  # Reversed order
 
-brand_order <- cleaned_data %>%
-  count(vehicle_brand, sort = TRUE) %>%
-  filter(vehicle_brand %in% top_brands) %>%
-  arrange(desc(n)) %>% 
-  pull(vehicle_brand)
-
-price_range <- price_range %>%
-  mutate(vehicle_brand = factor(vehicle_brand, levels = rev(brand_order))) 
-
-ggplot(price_range, aes(x = vehicle_brand, y = min_price)) +
-  geom_point(color = "red", size = 4) +
-  geom_point(aes(y = max_price), color = "darkred", size = 4) +
-  geom_segment(aes(xend = vehicle_brand, yend = max_price), color = "black", size = 1) +
-  coord_flip() + 
-  labs(title = "Price Range of Top 10 Truck Brands (Ordered by Frequency)",
+ggplot(filtered_data, aes(x = vehicle_brand, y = price_num)) +
+  geom_boxplot(fill = "darkred", color = "black", alpha = 0.7, outlier.color = "red", outlier.shape = 16) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Price Distribution of Top 10 Truck Brands",
        x = "Brand",
        y = "Price (PLN)") +
-  theme_minimal() +
-  theme(legend.position = "none")
+  theme_minimal()
 ```
 
-***Key Insights:*** Based on the visual analysis of truck prices by brand, we can now make a more informed recommendation for companies looking to purchase trucks. To guide this decision, we referred to a trusted source (<https://www.tip-used.com/en-gb/what-best-brand-trucks-europe>), which ranks truck brands in Europe by factors such as capacity and power. The top recommended brands are as follows:
+::: {style="text-align: justify"}
+***Key Insights:*** Based on the visual analysis of truck prices by brand, we can now make a more informed recommendation for companies looking to purchase trucks. To guide this decision, we referred to a trusted source [^6], which ranks truck brands in Europe by factors such as capacity and power. The top recommended brands are as follows:
 
 1.  Volvo\
 2.  MAN\
@@ -256,6 +265,7 @@ ggplot(price_range, aes(x = vehicle_brand, y = min_price)) +
 7.  Renault
 
 With this list in mind, companies can now consider both the price distribution and the reputation of these brands in Europe. For businesses aiming to make a strategic purchase, we recommend focusing on DAF or Scania trucks. These brands stand out not only because they are highly regarded in Europe but also because they have a strong presence in the market, with plenty of available offers and relatively stable price ranges. The lower price variation for these brands makes them a smart choice for companies seeking reliable trucks at competitive prices, ensuring both value and performance.
+:::
 
 ### Seller types
 
@@ -272,9 +282,11 @@ ggplot(cleaned_data %>% filter(!is.na(seller_type)), aes(x = seller_type, fill =
   theme_minimal()
 ```
 
+::: {style="text-align: justify"}
 ***Key Insights:*** The data shows that most of the truck listings are from private sellers, which is quite interesting given that trucks are often bought by businesses or companies for commercial use. This observation stands out because we might expect companies to be the primary sellers in the market, given the high demand for trucks in industries like logistics, construction, and transportation. However, the majority of the listings coming from private individuals suggests that there could be more personal sales happening than we might have initially assumed.
 
 One possible explanation for this could be that many truck owners, whether they are individuals or small business owners, may prefer to sell their trucks privately rather than through dealerships or business transactions. Private sellers might also be looking to upgrade their vehicles or downsize, leading them to list trucks that were once used for business purposes. This trend could point to a larger number of smaller businesses or individual entrepreneurs who own and sell trucks on their own.
+:::
 
 ### Price Distribution by Vehicle Brand
 
@@ -319,7 +331,9 @@ ggplot(filtered_data, aes(x = vehicle_brand,
 
 ```
 
+::: {style="text-align: justify"}
 ***Key Insights:*** The boxplot and the violin plot illustrates the price distribution of the top 10 most common truck brands in the dataset. The median price for most brands appears to be relatively similar, except for Krone, which has a significantly lower price range. Brands like Mercedes-Benz, MAN, and Volvo exhibit a wider price distribution, with higher interquartile ranges and many extreme outliers. This suggests that these brands offer both budget-friendly and high-end models. Iveco and Renault also show a considerable spread but with fewer extreme outliers compared to Mercedes-Benz and Volvo. The presence of numerous red dots (outliers) across most brands indicates that some trucks are priced significantly higher than the majority, possibly due to special features, low mileage, or newer models.
+:::
 
 ### Years vs. Price
 
@@ -333,11 +347,13 @@ ggplot(cleaned_data, aes(x = years,
   theme_minimal()
 ```
 
+::: {style="text-align: justify"}
 ***Key Insights:*** The relationship between truck age and price shows a clear trend: as trucks get older, their price goes down. This makes sense because older trucks usually have more wear and tear, might need more repairs, and often lack the newer features found in more recent models. The fact that the price drops steadily with age is not surprising and follows a simple pattern of depreciation where the truck’s value decreases at a consistent rate over time.
 
 Newer trucks typically offer more modern features, better fuel efficiency, and are seen as more reliable, which makes them more valuable. Older trucks, on the other hand, are seen as less desirable because they often come with higher maintenance costs and potential issues. The more a truck is used, the less buyers are willing to pay for it, which naturally drives the price down.
 
 The linear pattern of this decline in price shows that the used truck market follows a predictable trend. Buyers and sellers can expect that the older the truck, the lower the price will be, and this helps set clear expectations for both parties. This simple trend is a good example of how vehicles lose value over time, and it's easy to see how it works in practice.
+:::
 
 # Conclusions
 
