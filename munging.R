@@ -107,6 +107,13 @@ cleaned_data <- cleaned_data %>%
   )
 
 
+cleaned_data <- cleaned_data %>%
+  mutate(
+    price = gsub(" ", "", price),
+    price_num = as.integer(price)
+  )
+
+
 unique(cleaned_data$transmission)
 cleaned_data <- assign_segment(cleaned_data)
 write.csv(cleaned_data, "cleaned_truck_market_data.csv", row.names = FALSE)
